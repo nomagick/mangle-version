@@ -4,9 +4,8 @@ import { resolve } from 'path';
 
 import { detectGitCommitSHA, modifyPackageJsonSYNC } from './lib/version-mangler';
 
-const pkg = require('../package.json');
-
-program.version(pkg.version || '0.0.1')
+program
+    .description('Mangle package.version to [version][+-][build]')
     .option('-v, --version <version>', 'Override package version')
     .option('-b, --build <build>', 'Override build version')
     .option('-m, --mangle <mangle>', 'Override mangled version')
@@ -37,7 +36,7 @@ async function getBuildNumber() {
 
             const v = process.env[x]!.slice(0, 7)
 
-            console.log(`MangleVersion: Using build version from ENV[${x}]: ${v}`);
+            console.log(`mangle-version: Using build version from ENV[${x}]: ${v}`);
 
             return v;
         }
@@ -45,7 +44,7 @@ async function getBuildNumber() {
 
     const gitshaShort = (await detectGitCommitSHA(packagePath)).slice(0, 7);
 
-    console.log(`MangleVersion: Using git commit hash for build version: ${gitshaShort}`);
+    console.log(`mangle-version: Using git commit hash for build version: ${gitshaShort}`);
 
     return gitshaShort;
 }
@@ -62,7 +61,7 @@ function getVersionNumber() {
     for (const x of envBuildVersion) {
         if (process.env[x]) {
 
-            console.log(`MangleVersion: Using package version from ENV[${x}]: ${process.env[x]}`);
+            console.log(`mangle-version: Using package version from ENV[${x}]: ${process.env[x]}`);
             return process.env[x];
         }
     }
@@ -72,14 +71,14 @@ function getVersionNumber() {
 
     const packageVersion = `${pkg.version}`;
 
-    return packageVersion.replace(/\[\+\-]\S+$/, '');
+    return packageVersion.replace(/[\+\-]\S+$/, '');
 }
 
 async function modifyPackageVersion() {
 
     const version = options.mangle || `${await getVersionNumber()}${options.type === 'prerelease' ? '-' : '+'}${await getBuildNumber()}`;
 
-    console.log(`MangleVersion: Setting package version to: ${version}`);
+    console.log(`mangle-version: Setting package version to: ${version}`);
 
     modifyPackageJsonSYNC(packagePath, version);
 }
