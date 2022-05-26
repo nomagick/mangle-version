@@ -1,6 +1,6 @@
 {
     "name": "mangle-version",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Version mangler for package.json",
     "main": "main.js",
     "scripts": {
@@ -34,7 +34,7 @@
     },
     "dependencies": {
         "commander": "^8.1.0",
-        "simple-git": "^2.45.0",
+        "simple-git": "^3.7.1",
         "tslib": "^2.3.1"
     }
 }
